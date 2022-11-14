@@ -71,6 +71,8 @@ class DataUpdater():
     def _is_in_dynamoDB(
         self
     ) -> bool:
+        
+        
         return
     
     def _upload_to_dynamoDB(
