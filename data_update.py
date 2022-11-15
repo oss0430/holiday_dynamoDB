@@ -1,4 +1,5 @@
 import requests
+import json
 import json as jsonLoader
 """
     Search if DynamoDB has information for certain date (holiday)
@@ -110,3 +111,16 @@ class DataUpdater():
             self._upload_to_dynamoDB(parsed_response)
 
             return
+        
+    def _search_in_dynamoDB(
+        self,
+        date
+    ):
+        host = self.aws_url + "?date=" + str(date)
+        response = requests.get(host,headers=None)
+        
+        return response.content
+        '''
+        data = json.loads(response.content)
+        print(json.dumps(data, ensure_ascii=False, indent=3))
+        '''
