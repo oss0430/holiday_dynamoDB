@@ -119,8 +119,7 @@ class DataUpdater():
         host = self.aws_url + "?date=" + str(date)
         response = requests.get(host,headers=None)
         
-        return response.content
-        '''
         data = json.loads(response.content)
-        print(json.dumps(data, ensure_ascii=False, indent=3))
-        '''
+        for i in range(31):
+            if(str(i) in data):
+                print(data[str(i)][0]['holiday']['S'], data[str(i)][0]['date']['N'])
