@@ -76,8 +76,15 @@ class DataUpdater():
     ):
         host = self.aws_url + '/search_holiday_db' + "?date=" + str(date)
         response = requests.get(host,headers=None)
-        
+        data = json.loads(response.content)
+        for i in range(31):
+            if(str(i) in data):
+                print(data[str(i)][0]['holiday']['S'], data[str(i)][0]['date']['N'])
         return response.content
+        '''
+        data = json.loads(response.content)
+        print(json.dumps(data, ensure_ascii=False, indent=3))
+        '''
     
     def _upload_to_dynamoDB(
         self,
@@ -108,10 +115,10 @@ class DataUpdater():
 
         return post_response
         
+        
 my_data_updater = DataUpdater()
 my_data_updater.load_public_api_with_json("public_data_api.json")
 my_data_updater.load_aws_api_with_json("api_end_points.json")
-
 print(json.dumps(json.loads(my_data_updater._make_get_request('2022', '12').content), ensure_ascii=False, indent=4))
 print(my_data_updater._parse_response(my_data_updater._make_get_request('2019', '12')))
 my_data_updater._upload_to_dynamoDB
