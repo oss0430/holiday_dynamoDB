@@ -1,21 +1,50 @@
 import json
 import boto3
 
+
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('User')
     query_parameters = event.get('queryStringParameters')
-    print(query_parameters)
-    #date = query_parameters.get('date')
-    item = table.get_item(
-        Key = {
-            'no' : '1'
-        }
-    )
-    print(item)
+    query_date = query_parameters['date']
+    print(query_date)
     
-    
+    return_key = 0
+    holiday_info = {
+        
+    }
+    client = boto3.client('dynamodb')
+    for i in range (31):
+        if(i<10):
+            date = str(query_date)+ "0" + str(i)
+        else:
+            date = str(query_date) + str(i)
+        print(date)
+        response = client.batch_get_item(
+            RequestItems = {
+                'Holiday' : {
+                    'Keys' : [
+                        {
+                            'sortdate' : {
+                                'N' : date
+                            }
+                        }
+                    ]
+                }
+            }
+        )
+        temp = response['Responses'].get('Holiday')
+        
+        if not temp:
+            print("list1 is empty")
+        
+        if temp:
+            print(temp)
+            holiday_info.setdefault(return_key,temp)
+            return_key += 1
+
+        
+
     return {
         'statusCode' : 200,
-        'body' : json.dumps(item.get('Item'))
+        'body' : json.dumps(holiday_info)
     }
