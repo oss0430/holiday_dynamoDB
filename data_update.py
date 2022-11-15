@@ -23,10 +23,12 @@ class DataUpdater():
         self,
         key,
         url,
+        aws_url,
         table
     )-> None:
         self.key = key
         self.url = url
+        self.aws_url = aws_url
         self.table = table
     
     def _make_get_request(
@@ -59,6 +61,14 @@ class DataUpdater():
             self.key = data['key_decoding']
             self.url = data['url']    
 
+    def load_aws_api_with_json(
+        self,
+        file_path
+    )-> None:
+    
+        with open(file_path, 'r') as file:
+            data = jsonLoader.load(file)
+            self.aws_url = data['url']    
 
     def _search_in_dynamoDB(
         self,
@@ -79,6 +89,8 @@ class DataUpdater():
         self,
         data
     ):
+        host =
+
         return
 
 
