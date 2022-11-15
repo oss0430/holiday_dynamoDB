@@ -24,7 +24,7 @@ def lambda_handler(event, context):
                 'Holiday' : {
                     'Keys' : [
                         {
-                            'sortdate' : {
+                            'date' : {
                                 'N' : date
                             }
                         }
