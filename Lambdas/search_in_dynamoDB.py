@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     query_parameters = event.get('queryStringParameters')
     query_date = query_parameters['date']
     
-    table_name = 'Holiday'
+    table_name = 'Holidays'
     print(query_date)
     
     return_key = 0

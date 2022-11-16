@@ -1,17 +1,6 @@
 import requests
 import json 
 from urllib.parse import urlencode
-## Get Public Data
-#url = 'http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getAnniversaryInfo'
-#params ={'serviceKey' : data['key_decoding'], 'pageNo' : '1', 'numOfRows' : '10', 'solYear' : '2019', 'solMonth' : '02' }
-
-#response = requests.get(url, params=params)
-#print(type(response))
-#print(response.text, type(response.text))
-#response_data = response.json()
-#print(response_data)
-#print(response.content.body)
-
 
 class DataUpdater():
     def __init__(
@@ -41,9 +30,16 @@ class DataUpdater():
     ) -> dict:
         json_response = json.loads(response.content)
         list_response = json_response["response"]["body"]["items"]["item"]
+        if not isinstance(list_response, list):
+            list_response = [list_response]
         parsed_list = []
         for dict in list_response:
-            parsed_list.append({"date" : str(dict['locdate'])[2:],"sortdate" : str(dict['locdate'])[2:6],"holiday" : str(dict['dateName'])})
+            
+            holiday_date = str(dict['locdate'])[2:]
+            holiday_sortdate = str(dict['locdate'])[2:6]
+            holiday_name = str(dict['dateName'])
+
+            parsed_list.append({"date" : holiday_date,"sortdate" : holiday_sortdate,"holiday" : holiday_name})
         
         return parsed_list
 
@@ -75,18 +71,13 @@ class DataUpdater():
         date
     ):
         host = self.aws_url + '/search_holiday_db' + "?date=" + str(date)
-        print(host)
         response = requests.get(host,headers=None)
-        print(response.text)
+
         data = json.loads(response.content)
         for i in range(31):
             if(str(i) in data):
                 print(data[str(i)][0]['holiday']['S'], data[str(i)][0]['date']['N'])
         return response.content
-        '''
-        data = json.loads(response.content)
-        print(json.dumps(data, ensure_ascii=False, indent=3))
-        '''
     
     def _upload_to_dynamoDB(
         self,
@@ -96,7 +87,6 @@ class DataUpdater():
         for single_data in datas :
             json_data = json.dumps(single_data, ensure_ascii=False)
             response = requests.post(host, json = json_data, headers=None)
-
 
         return response
 
@@ -112,19 +102,17 @@ class DataUpdater():
 
         return post_response
         
-        
+    
 my_data_updater = DataUpdater()
 my_data_updater.load_public_api_with_json("public_data_api.json")
 my_data_updater.load_aws_api_with_json("api_end_points.json")
-print(json.dumps(json.loads(my_data_updater._make_get_request('2022', '12').content), ensure_ascii=False, indent=4))
-print(my_data_updater._parse_response(my_data_updater._make_get_request('2019', '12')))
-print("====================")
-#my_data_updater.update_dynamoDB('2019', '12')
-my_data_updater._search_in_dynamoDB(1912)
-my_data_updater._search_in_dynamoDB(2012)
+my_data_updater.update_dynamoDB('2021', '05')
+my_data_updater.update_dynamoDB('2021', '01')
+my_data_updater._search_in_dynamoDB(2101)
+my_data_updater._search_in_dynamoDB(2105)
 
-newrsponse = requests.get('https://8lvgjl8wpj.execute-api.ap-northeast-1.amazonaws.com/default/search_in_dynamoDB?date=2210')
-print(newrsponse.content)
-newrsponse = requests.get('https://jspmmh962l.execute-api.ap-northeast-2.amazonaws.com/default/search_in_dynamoDB?date=1912')
-print(newrsponse.content)
+#newrsponse = requests.get('https://8lvgjl8wpj.execute-api.ap-northeast-1.amazonaws.com/default/search_in_dynamoDB?date=2210')
+#print(newrsponse.content)
+#newrsponse = requests.get('https://jspmmh962l.execute-api.ap-northeast-2.amazonaws.com/default/search_holiday_db?date=1912')
+#print(newrsponse.content)
 
