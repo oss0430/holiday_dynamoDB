@@ -99,7 +99,7 @@ class DataUpdater():
             #response = requests.post(host, data = single_data, headers=None)
             
             #print(single_data, type(single_data))
-            print(response.content)
+            print(response.text)
 
         return response
 
