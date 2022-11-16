@@ -75,7 +75,7 @@ class DataUpdater():
         date
     ):
         host = self.aws_url + '/search_holiday_db' + "?date=" + str(date)
-    
+        print(host)
         response = requests.get(host,headers=None)
         print(response.text)
         data = json.loads(response.content)
@@ -122,3 +122,9 @@ print("====================")
 #my_data_updater.update_dynamoDB('2019', '12')
 my_data_updater._search_in_dynamoDB(1912)
 my_data_updater._search_in_dynamoDB(2012)
+
+newrsponse = requests.get('https://8lvgjl8wpj.execute-api.ap-northeast-1.amazonaws.com/default/search_in_dynamoDB?date=2210')
+print(newrsponse.content)
+newrsponse = requests.get('https://jspmmh962l.execute-api.ap-northeast-2.amazonaws.com/default/search_in_dynamoDB?date=1912')
+print(newrsponse.content)
+

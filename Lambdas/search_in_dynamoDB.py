@@ -6,6 +6,8 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     query_parameters = event.get('queryStringParameters')
     query_date = query_parameters['date']
+    
+    table_name = 'Holiday'
     print(query_date)
     
     return_key = 0
@@ -21,7 +23,7 @@ def lambda_handler(event, context):
         print(date)
         response = client.batch_get_item(
             RequestItems = {
-                'Holiday' : {
+                table_name : {
                     'Keys' : [
                         {
                             'date' : {
@@ -32,7 +34,8 @@ def lambda_handler(event, context):
                 }
             }
         )
-        temp = response['Responses'].get('Holiday')
+        temp = response['Responses'].get(table_name)
+        print(temp)
         
         if not temp:
             print("list1 is empty")
@@ -41,8 +44,6 @@ def lambda_handler(event, context):
             print(temp)
             holiday_info.setdefault(return_key,temp)
             return_key += 1
-
-        
 
     return {
         'statusCode' : 200,
