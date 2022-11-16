@@ -75,7 +75,9 @@ class DataUpdater():
         date
     ):
         host = self.aws_url + '/search_holiday_db' + "?date=" + str(date)
+    
         response = requests.get(host,headers=None)
+        print(response.text)
         data = json.loads(response.content)
         for i in range(31):
             if(str(i) in data):
@@ -93,13 +95,8 @@ class DataUpdater():
         host = self.aws_url + '/add_holiday_to_db'
         for single_data in datas :
             json_data = json.dumps(single_data, ensure_ascii=False)
-            print(json_data,type(json_data))
-            #json_data = json_data.encode('utf8')
             response = requests.post(host, json = json_data, headers=None)
-            #response = requests.post(host, data = single_data, headers=None)
-            
-            #print(single_data, type(single_data))
-            print(response.text)
+
 
         return response
 
@@ -121,5 +118,7 @@ my_data_updater.load_public_api_with_json("public_data_api.json")
 my_data_updater.load_aws_api_with_json("api_end_points.json")
 print(json.dumps(json.loads(my_data_updater._make_get_request('2022', '12').content), ensure_ascii=False, indent=4))
 print(my_data_updater._parse_response(my_data_updater._make_get_request('2019', '12')))
-my_data_updater._upload_to_dynamoDB
-print(my_data_updater.update_dynamoDB('2019', '12'))
+print("====================")
+#my_data_updater.update_dynamoDB('2019', '12')
+my_data_updater._search_in_dynamoDB(1912)
+my_data_updater._search_in_dynamoDB(2012)
