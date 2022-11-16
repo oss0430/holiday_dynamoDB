@@ -101,18 +101,3 @@ class DataUpdater():
         post_response = self._upload_to_dynamoDB(parsed_response)
 
         return post_response
-        
-    
-my_data_updater = DataUpdater()
-my_data_updater.load_public_api_with_json("public_data_api.json")
-my_data_updater.load_aws_api_with_json("api_end_points.json")
-my_data_updater.update_dynamoDB('2021', '05')
-my_data_updater.update_dynamoDB('2021', '01')
-my_data_updater._search_in_dynamoDB(2101)
-my_data_updater._search_in_dynamoDB(2105)
-
-#newrsponse = requests.get('https://8lvgjl8wpj.execute-api.ap-northeast-1.amazonaws.com/default/search_in_dynamoDB?date=2210')
-#print(newrsponse.content)
-#newrsponse = requests.get('https://jspmmh962l.execute-api.ap-northeast-2.amazonaws.com/default/search_holiday_db?date=1912')
-#print(newrsponse.content)
-
